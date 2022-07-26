@@ -1,16 +1,22 @@
-import img from '../images/Union_t.svg';
+import useClose from "../utils/hooks/useClose";
+import img_success from '../images/Union_t.svg';
+import img_error from '../images/Union_f.svg';
 
-function InfoTooltip() {
+function InfoTooltip({ name, registeredUp, isOpen, onClose }) {
+  useClose(isOpen, onClose);
+
+  const infoText = `${registeredUp ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}`;
+
   return (
-    <div className="popup popup_type_info">
+    <div className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`}>
       <div className="popup__container">
-        <img className="popup__info-img" src={img} alt="" />
-        <p className="popup__info-text">Вы успешно зарегистрировались!</p>
+        <img className="popup__info-img" src={registeredUp ? img_success : img_error} alt={registeredUp ? "Успешно" : "Ошибка"} />
+        <p className="popup__info-text">{infoText}</p>
         <button
           className="popup__close-button"
           type="button"
           aria-label="Закрыть"
-          // onClick={onClose}
+          onClick={onClose}
           >
         </button>
       </div>

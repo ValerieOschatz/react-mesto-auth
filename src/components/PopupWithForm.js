@@ -1,4 +1,4 @@
-import useClose from "../utils/useClose";
+import useClose from "../utils/hooks/useClose";
 
 function PopupWithForm({ isOpen, name, title, children, buttonText, onClose, onSubmit, isValid, isButtonDisabled }) {
   useClose(isOpen, onClose);
