@@ -1,11 +1,11 @@
 .sign__submit-button {
-  height: 50px;
+  height: 54px;
   background-color: #FFFFFF;
   border-radius: 2px;
   font-size: 18px;
   line-height: 1.22;
   color: #000000;
-  margin-top: 216px;
+  margin-top: 214px;
   cursor: pointer;
   transition: opacity .5s ease-out;
 }

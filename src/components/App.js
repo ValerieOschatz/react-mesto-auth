@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import ProtectedRoute from "./ProtectedRoute";
 import Header from './Header';
 import Main from './Main';
 import Register from './Register';
@@ -10,6 +11,7 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import DeleteCardPopup from './DeleteCardPopup';
 import ImagePopup from './ImagePopup';
+import InfoTooltip from './InfoTooltip';
 import api from '../utils/api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import './App.css';
@@ -24,6 +26,7 @@ function App() {
   const [deletedCard, setDeletedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -140,18 +143,21 @@ function App() {
           <Header />
 
           <Switch>
-            <Route exact path="/">
-              <Main
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onEditAvatar={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                onDeleteIconClick={handleDeleteIconClick}
-                cards={cards}
-                onCardLike={handleCardLike} />
+            <ProtectedRoute
+              exact
+              path="/"
+              loggedIn={loggedIn}
+              component={Main}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              onDeleteIconClick={handleDeleteIconClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+            />
 
-              <Footer />
-            </Route>
+            {loggedIn && <Footer />}
 
             <Route path="/sign-up">
               <Register />
@@ -159,6 +165,14 @@ function App() {
 
             <Route path="/sign-in">
               <Login />
+            </Route>
+
+            <Route>
+              {loggedIn ? (
+                <Redirect to="/" />
+              ) : (
+                <Redirect to="/sign-in" />
+              )}
             </Route>
           </Switch>
 
@@ -187,6 +201,8 @@ function App() {
             deletedCard={deletedCard} />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+          <InfoTooltip />
         </div>
       </div>
     </CurrentUserContext.Provider>
