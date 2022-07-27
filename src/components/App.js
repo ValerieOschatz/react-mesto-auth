@@ -114,8 +114,8 @@ function App() {
 
   function handleRegister(password, email) {
     register(password, email)
-    .then((res) => {
-      if (res) {
+    .then((data) => {
+      if (data) {
         setRegisteredUp(true);
         setInfoTooltipOpen(true);
         history.push('/sign-in');
@@ -131,7 +131,7 @@ function App() {
     login(password, email)
     .then((data) => {
       if (data.token) {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('jwt', data.token);
         setLoggedIn(true);
         setEmail(email);
         history.push('/');
@@ -143,23 +143,26 @@ function App() {
   }
 
   useEffect(() => {
-    function tokenCheck() {
-      const token = localStorage.getItem('token');
-      if (token) {
-        getContent(token).then((res) => {
-          if (res) {
-            setLoggedIn(true);
-            setEmail(email);
-            history.push("/");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-      }
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      getContent(jwt).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          history.push("/");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
     }
-    tokenCheck();
-  }, [history]);
+  }, []);
+
+  function handleSignOut(){
+    setLoggedIn(false);
+    setEmail('');
+    localStorage.removeItem('jwt');
+  }
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
@@ -195,7 +198,7 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
-          <Header email={email} />
+          <Header email={email} onSignOut={handleSignOut} />
 
           <Switch>
             <ProtectedRoute
