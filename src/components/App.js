@@ -14,7 +14,7 @@ import ImagePopup from './ImagePopup';
 import InfoTooltip from './InfoTooltip';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/api';
-import { register } from '../utils/auth';
+import { register, login, getContent } from '../utils/auth';
 import './App.css';
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
   const [registeredUp, setRegisteredUp] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
+  const [email, setEmail] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -111,8 +112,8 @@ function App() {
     })
   }
 
-  function handleRegister(data) {
-    register(data)
+  function handleRegister(password, email) {
+    register(password, email)
     .then((res) => {
       if (res) {
         setRegisteredUp(true);
@@ -125,6 +126,40 @@ function App() {
       console.log(err);
     })
   }
+
+  function handleLogin(password, email) {
+    login(password, email)
+    .then((data) => {
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        setLoggedIn(true);
+        setEmail(email);
+        history.push('/');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() => {
+    function tokenCheck() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        getContent(token).then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setEmail(email);
+            history.push("/");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+      }
+    }
+    tokenCheck();
+  }, [history]);
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
@@ -160,7 +195,7 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
-          <Header />
+          <Header email={email} />
 
           <Switch>
             <ProtectedRoute
@@ -177,14 +212,12 @@ function App() {
               onCardLike={handleCardLike}
             />
 
-            {loggedIn && <Footer />}
-
             <Route path="/sign-up">
               <Register onRegister={handleRegister} />
             </Route>
 
             <Route path="/sign-in">
-              <Login />
+              <Login onLogin={handleLogin} />
             </Route>
 
             <Route>
@@ -195,6 +228,8 @@ function App() {
               )}
             </Route>
           </Switch>
+
+          {loggedIn && <Footer />}
 
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}

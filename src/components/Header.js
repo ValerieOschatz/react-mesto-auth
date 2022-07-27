@@ -1,7 +1,7 @@
 import { Route, Link, Switch } from "react-router-dom";
 import logo from '../images/Logo.svg';
 
-function Header() {
+function Header({ email }) {
   return (
     <header className="header">
       <img className="header__logo" src={logo} alt="Логотип Место" />
@@ -14,7 +14,7 @@ function Header() {
         </Route>
         <Route exact path="/">
           <div className="header__container">
-            <p className="header__email"></p>
+            <p className="header__email">{email}</p>
             <Link to="/sign-in" className="header__link header__link_sign-out">Выйти</Link>
           </div>
         </Route>
