@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 import ProtectedRoute from "./ProtectedRoute";
 import Header from './Header';
 import Main from './Main';
@@ -12,7 +13,6 @@ import AddPlacePopup from './AddPlacePopup';
 import DeleteCardPopup from './DeleteCardPopup';
 import ImagePopup from './ImagePopup';
 import InfoTooltip from './InfoTooltip';
-import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/api';
 import { register, login, getContent } from '../utils/auth';
 import './App.css';
@@ -32,6 +32,58 @@ function App() {
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
   const [email, setEmail] = useState('');
   const history = useHistory();
+
+  function handleRegister(password, email) {
+    register(password, email)
+    .then((data) => {
+      if (data) {
+        setRegisteredUp(true);
+        setInfoTooltipOpen(true);
+        history.push('/sign-in');
+      }
+    })
+    .catch((err) => {
+      setInfoTooltipOpen(true);
+      console.log(err);
+    })
+  }
+
+  function handleLogin(password, email) {
+    login(password, email)
+    .then((data) => {
+      if (data.token) {
+        localStorage.setItem('jwt', data.token);
+        setLoggedIn(true);
+        setEmail(email);
+        history.push('/');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      getContent(jwt).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          history.push("/");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+  }, []);
+
+  function handleSignOut(){
+    setLoggedIn(false);
+    setEmail('');
+    localStorage.removeItem('jwt');
+  }
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -110,58 +162,6 @@ function App() {
     .catch((err) => {
       console.log(err);
     })
-  }
-
-  function handleRegister(password, email) {
-    register(password, email)
-    .then((data) => {
-      if (data) {
-        setRegisteredUp(true);
-        setInfoTooltipOpen(true);
-        history.push('/sign-in');
-      }
-    })
-    .catch((err) => {
-      setInfoTooltipOpen(true);
-      console.log(err);
-    })
-  }
-
-  function handleLogin(password, email) {
-    login(password, email)
-    .then((data) => {
-      if (data.token) {
-        localStorage.setItem('jwt', data.token);
-        setLoggedIn(true);
-        setEmail(email);
-        history.push('/');
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      getContent(jwt).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setEmail(res.data.email);
-          history.push("/");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    }
-  }, []);
-
-  function handleSignOut(){
-    setLoggedIn(false);
-    setEmail('');
-    localStorage.removeItem('jwt');
   }
 
   function handleEditProfileClick() {

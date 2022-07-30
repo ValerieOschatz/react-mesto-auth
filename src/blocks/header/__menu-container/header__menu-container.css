@@ -1,0 +1,11 @@
+.header__menu-container {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+@media screen and (max-width: 635px) {
+  .header__menu-container {
+    display: none;
+  }
+}

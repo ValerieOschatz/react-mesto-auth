@@ -3,11 +3,17 @@
 @import url(./blocks/page/page.css);
 
 @import url(./blocks/header/header.css);
+@import url(./blocks/header/__hidden-container/header__hidden-container.css);
+@import url(./blocks/header/__hidden-container/_visible/header__hidden-container_visible.css);
+@import url(./blocks/header/__main-container/header__main-container.css);
 @import url(./blocks/header/__logo/header__logo.css);
 @import url(./blocks/header/__link/header__link.css);
-@import url(./blocks/header/__container/header__container.css);
+@import url(./blocks/header/__menu-container/header__menu-container.css);
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__button/header__button.css);
+@import url(./blocks/header/__menu-button/header__menu-button.css);
+@import url(./blocks/header/__menu-button/_type/header__menu-button_type_open.css);
+@import url(./blocks/header/__menu-button/_type/header__menu-button_type_close.css);
 
 @import url(./blocks/main/main.css);
 

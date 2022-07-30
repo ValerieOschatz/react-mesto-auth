@@ -2,5 +2,18 @@
   width: 358px;
   display: flex;
   flex-direction: column;
-  margin-top: 60px;
+  margin: 60px auto 0;
+}
+
+@media screen and (max-width: 635px) {
+  .sign__form {
+    width: calc(100% - 100px * 2);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .sign__form {
+    width: 260px;
+    margin-top: 40px;
+  }
 }

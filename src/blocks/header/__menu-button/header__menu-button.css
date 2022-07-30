@@ -1,0 +1,18 @@
+.header__menu-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity .5s ease-out;
+  display: none;
+}
+
+.header__menu-button:hover {
+  opacity: .6;
+}
+
+@media screen and (max-width: 635px) {
+  .header__menu-button {
+    display: flex;
+  }
+}

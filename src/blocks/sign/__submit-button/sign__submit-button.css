@@ -13,3 +13,12 @@
 .sign__submit-button:hover {
   opacity: .85;
 }
+
+@media screen and (max-width: 635px) {
+  .sign__submit-button {
+    height: 50px;
+    margin-top: 171px;
+    font-size: 16px;
+    line-height: 1.19;
+  }
+}

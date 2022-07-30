@@ -3,3 +3,9 @@
   height: 120px;
   margin-top: 26px;
 }
+
+@media screen and (max-width: 635px) {
+  .popup__info-img {
+    margin-top: 24px;
+  }
+}
