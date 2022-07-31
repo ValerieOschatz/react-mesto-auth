@@ -27,9 +27,9 @@ function App() {
   const [deletedCard, setDeletedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [registeredUp, setRegisteredUp] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
+  const [isPositiveAnswer, setPositiveAnswer] = useState(false);
   const [email, setEmail] = useState('');
   const history = useHistory();
 
@@ -37,13 +37,14 @@ function App() {
     register(password, email)
     .then((data) => {
       if (data) {
-        setRegisteredUp(true);
         setInfoTooltipOpen(true);
+        setPositiveAnswer(true);
         history.push('/sign-in');
       }
     })
     .catch((err) => {
       setInfoTooltipOpen(true);
+      setPositiveAnswer(false);
       console.log(err);
     })
   }
@@ -59,6 +60,8 @@ function App() {
       }
     })
     .catch((err) => {
+      setInfoTooltipOpen(true);
+      setPositiveAnswer(false);
       console.log(err);
     })
   }
@@ -77,7 +80,7 @@ function App() {
         console.log(err);
       })
     }
-  }, []);
+  }, [history]);
 
   function handleSignOut(){
     setLoggedIn(false);
@@ -86,15 +89,17 @@ function App() {
   }
 
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-    .then(([userData, cardData]) => {
-      setCurrentUser(userData);
-      setCards(cardData);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cardData]) => {
+        setCurrentUser(userData);
+        setCards(cardData);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+  }, [loggedIn]);
 
   function handleUpdateUser(userData) {
     setLoading(true);
@@ -262,8 +267,8 @@ function App() {
 
           <InfoTooltip
             name={"info"}
-            registeredUp={registeredUp}
             isOpen={isInfoTooltipOpen}
+            isPositiveAnswer={isPositiveAnswer}
             onClose={closeAllPopups} />
         </div>
       </div>
