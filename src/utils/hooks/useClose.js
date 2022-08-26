@@ -23,5 +23,5 @@ export default function useClose(isOpen, handleClose) {
       document.removeEventListener("keydown", handleEscClose);
       document.removeEventListener('mousedown', handleOverlayClick);
     }
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 }

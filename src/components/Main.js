@@ -10,7 +10,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onDeleteIc
       <section className="profile">
         <a
           className="profile__avatar"
-          href="#"
+          href="##"
           onClick={onEditAvatar}
           style={{ backgroundImage: `url(${currentUser.avatar})` }}>
         </a>
