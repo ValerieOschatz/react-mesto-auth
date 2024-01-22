@@ -6,16 +6,12 @@ Mesto  - приложение для хранения и просмотра фо
 Проект написан при помощи библиотеки React.js.
 
 
-### Стек
-
-* JS
-* HTML
-* CSS
-
-
 ### Технологии
 
+* JS
 * React.js
+* HTML
+* CSS
 * React Router
 * API
 * Flexbox
